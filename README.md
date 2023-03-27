@@ -16,7 +16,7 @@ To test the pipeline, raw data from the NCBI project under the BioProject identi
 The pipeline runs in the command line where data cannot be visualized. To visualize output files, you can use the provided Shiny app to analyze your data. 
 
 ## Requirements
-To run this pipeline, the first step is to obtain the raw reads. The following dependencies also need to be installed:
+To run this pipeline, the first step is to obtain the raw reads in fastq format. Then, save the fastq files in your home directory in a folder name fastq_files. In addition to the fasta files, the following dependencies need to be installed:
 - FastQC 
 - Trimmomatic 
 - STAR
