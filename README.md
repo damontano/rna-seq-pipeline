@@ -17,7 +17,7 @@ The pipeline runs in the command line where data cannot be visualized. To visual
 
 ## Requirements
 To run this pipeline, the first step is to obtain the raw reads. The following dependencies also need to be installed:
-FastQC 
-Trimmomatic 
-STAR
-featureCounts
+- FastQC 
+- Trimmomatic 
+- STAR
+- featureCounts
