@@ -38,23 +38,43 @@ TMP_DIR="$working_dir/temp"
 
 # Create required directories
 mkdir -p "$TMP_DIR" "$PRE_TRIMMING_DIR" "$TRIMMING_DIR" "$POST_TRIMMING_DIR" "$MULTIQC_DIR" "$SAM_DIR" "$BAM_DIR" "$POST_ALIGNMENT_DIR" "$QUANTIFICATION_DIR"
-  
+
+# Check if the user provided input directory
+if [ -z "$input_dir" ]; then
+	echo "Please provide an input directory with fastq files. Supported file format is .fastq.gz"
+	exit 1
+fi
+
+# Check if the input directory exists and contains only valid files
+if [ ! -d "$input_dir" ]; then
+	echo "The input directory $input_dir does not exist."
+	exit 1
+fi
+
+input_files=$(find "$input_dir" -type f \( -name "*.fastq" \))
+
+if [ -z "$input_files" ]; then
+	echo "The input directory $input_dir does not contain any valid fastq files."
+	exit 1
+fi
+
+# Run RNA-seq pipeline analysis
 for FILE in "$input_dir"/*.fastq.gz; do
     SAMPLE_NAME=$(basename "$FILE" .fastq.gz)
 
-    # run FastQC on the raw reads
+    # Check quality of raw reads using FastQC
     fastqc -t $threads -o "$PRE_TRIMMING_DIR" "$FILE"
     echo "FastQC completed for raw reads of sample: $SAMPLE_NAME"
 
-    # run FastQC on the trimmed sequences
+    # Trim sequences using cutadapt
     cutadapt --cores $threads -a $standard_illumina_adapter -m $minimum_read_length -q $quality_cutoff -o "$TRIMMING_DIR"/"$SAMPLE_NAME"_trimmed.fastq.gz "$FILE"
     echo "Trimming completed for sample: $SAMPLE_NAME"
 
-    # run FastQC on the trimmed sequences
+    # Run FastQC on the trimmed sequences
     fastqc -t $threads -o "$POST_TRIMMING_DIR" "$TRIMMING_DIR"/"$SAMPLE_NAME"_trimmed.fastq.gz
     echo "FastQC completed for trimmed sequences of sample: $SAMPLE_NAME"
     
-    # run HISAT2 to align reads
+    # Run HISAT2 to align reads
     hisat2 -p $threads -q -x $index_dir -U "$TRIMMING_DIR"/"$SAMPLE_NAME"_trimmed.fastq.gz -S "$SAM_DIR"/"$SAMPLE_NAME"_aligned.sam
     echo "Alignment completed for sample: $SAMPLE_NAME"
 
@@ -66,7 +86,7 @@ for FILE in "$input_dir"/*.fastq.gz; do
     fastqc -t $threads -o "$POST_ALIGNMENT_DIR" "$SAM_DIR"/"$SAMPLE_NAME"_aligned.sam
     echo "FastQC completed for aligned sequences of sample: $SAMPLE_NAME"
 
-    #Run featureCounts
+    # Run featureCounts to obtain expression quantification
     featureCounts --tmpDir "$TMP_DIR" -T $threads -a $annotation_dir -o "$QUANTIFICATION_DIR"/count_table.txt "$BAM_DIR"/"$SAMPLE_NAME"_aligned.bam
 done
 
