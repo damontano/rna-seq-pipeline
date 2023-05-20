@@ -23,7 +23,7 @@ RNA-seq technique is now more accessible to researchers thanks to innovations in
 
 <figure>
   <figcaption><strong>Figure 1.</strong> RNA-Seq Workflow: From Experimental Design to Data Analysis.</figcaption>
-  <img src="rna_workflow.png" alt="Figure alt text" title="Figure caption" height="150px" style="object-fit: cover;">
+  <img src="images/rna_workflow.png" alt="Figure alt text" title="Figure caption" height="150px" style="object-fit: cover;">
 </figure>
 
 ### **Motivation**
