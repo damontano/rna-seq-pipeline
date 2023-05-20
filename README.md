@@ -2,7 +2,7 @@
 
 ## Abstract
 
-RNA sequencing (RNA-seq) pipeline is a term used to describe the different steps to analyze gene expression data generated through RNA-seq experiments. The analysis begins with quality check of the raw reads followed by quality control where the raw reads are trimmed. Then, the processing steps include alignment, quantification, normalization, and differential expression analysis. Here we present a simple RNA-seq data analysis pipeline that integrates popular software tools, including FastQC, MultiQC, cutadapt, HISAT2, featurecounts, and DESeq2, to process and analyze RNA-seq data generated from RNA-seq experiments. The pipeline is implemented in a bash script and R Shiny, a web application framework that allows for interactive visualization. We demonstrate the efficacy of our pipeline in analyzing RNA-seq data by identifying differentially expressed genes generated from a mouse mammary gland RNA data. Our pipeline serves as a standardized and efficient platform for high-quality gene expression analysis, which can be further adapted for other RNA-seq datasets.
+RNA sequencing (RNA-seq) pipeline is a term used to describe the different steps to analyze gene expression data generated through RNA-seq experiments. The analysis begins with quality check of the raw reads followed by quality control where the raw reads are trimmed. Then, the processing steps include alignment, quantification, normalization, and differential expression analysis. Here we present a simple RNA-seq data analysis pipeline that integrates popular software tools, including FastQC, MultiQC, cutadapt, HISAT2, featurecounts, and Limma voom, to process and analyze RNA-seq data generated from RNA-seq experiments. The pipeline is implemented in a bash script and R Shiny, a web application framework that allows for interactive visualization. We demonstrate the efficacy of our pipeline in analyzing RNA-seq data by identifying differentially expressed genes generated from a mouse mammary gland RNA data. Our pipeline serves as a standardized and efficient platform for high-quality gene expression analysis, which can be further adapted for other RNA-seq datasets.
 
 ***
 
@@ -25,7 +25,7 @@ While RNA-Seq generates a vast amount of data that can be difficult to analyze, 
 
 RNA-seq technique is now more accessible to researchers thanks to innovations in next generation sequencing technology, which have significantly decreased the cost of sequencing. Analyzing the RNA-seq data is the final step in the experiment, and choosing the appropriate software is crucial for performing quality control measures, correcting biases, and ultimately answering the research questions posed by the study. The complete steps involved in the RNA workflow are presented in the following figure:
 
-<img src="rna_workflow.png"  alt="Alt text for image"  width="229.96900000000005px"  height="71.305px"  style="object-fit:cover"/>
+![My Image](pipeline/images/rna_workflow.png)
 
 ### Motivation
 
