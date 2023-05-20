@@ -8,7 +8,6 @@ library(ggrepel)
 library(ggplot2)
 library(plotly)
 
-
 # Creating the front end of the application
 ui <- dashboardPage(
   # Setting the layout for the title, file upload and normalization button
@@ -66,7 +65,6 @@ server <- function(input, output) {
     row.names(n) <- row.names(norm_counts)
     list(norm_counts = norm_counts, E = n)
   })
-  
   
   # Creating a density plot for normalized count table 
   output$normalized_plot <- renderPlot({
