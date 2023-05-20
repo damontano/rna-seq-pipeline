@@ -10,7 +10,7 @@ library(plotly)
 
 # Creating the front end of the application
 ui <- dashboardPage(
-  dashboardHeader(title = "RNA Genie"),
+  dashboardHeader(title = "RNAgenie"),
   dashboardSidebar(
     fileInput("count_table", "Upload count data"),
     actionButton("normalize_button", "Normalize Data")
@@ -33,13 +33,10 @@ server <- function(input, output) {
   # Load count data
   data <- reactive({
     req(input$count_table)
-    
     inFile <- input$count_table
     data <- read.table(inFile$datapath, header = TRUE, row.names = 1)
-    
     data <- data + 1
     data <- log2(data)
-    
     return(data)
   })
   
