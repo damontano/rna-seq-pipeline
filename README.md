@@ -239,13 +239,11 @@ Another consideration is that by default, the pipeline.sh script will not count 
 
 ### Visualization using R-shiny
 
-The R Shiny dashboard can be accessed [here]("https://lyra.shinyapps.io/RNAgenie"). The dashboard accepts a count table generated from the featureCounts program as input or any other tool as long as the table only has numeric data and the sample name are in columns. Users can normalize the data using limma voom and explore the raw count data, normalized count data, a pca plot, and a log transformation of the data through a boxplot. Keep in mind that to visualize the plots, the Normalize Data button must be clicked. Also, the server may be a little slow when loading the info so you must wait for it to load completely. There is also a chance that the dashboard may not work in the server. If that happens, open the folder named visualizations present in this repository and download the app.R script. In R studio open the app.R script and dowload all the dependencies using the following command:
-
-A depiction on how the dashboard looks when a count table is uploaded is presented in Figure 2.
+The R Shiny dashboard can be accessed [here]("https://lyra.shinyapps.io/RNAgenie"). The dashboard accepts a count table generated from the featureCounts program as input or any other tool as long as the table only has numeric data and the sample name are in columns. Users can normalize the data using limma voom and explore the raw count data, normalized count data, a pca plot, and a log transformation of the data through a boxplot. Keep in mind that to visualize the plots, the Normalize Data button must be clicked. Also, the server may be a little slow when loading the info so you must wait for it to load completely. There is also a chance that the dashboard may not work in the server. If that happens, open the folder named visualizations present in this repository and download the app.R script. In R studio open the app.R script and dowload all the dependencies (i.e the libraries needed to run the pipeline). A depiction on how the dashboard looks when a count table is uploaded is presented in Figure 2.
 
 <figure>
   <figcaption><strong>Figure 2.</strong> Visualization of count table using R Shiny dashboard.</figcaption>
-  <img src="dashboard.png" alt="Figure alt text" title="Figure caption" height="190px" style="object-fit: cover;">
+  <img src="pipeline/images/dashboard.png" alt="Figure alt text" title="Figure caption" height="190px" style="object-fit: cover;">
 </figure>
 
 ## Implementation constraints
