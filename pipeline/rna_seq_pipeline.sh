@@ -67,7 +67,7 @@ for FILE in "$input_dir"/*.fastq.gz; do
     echo "FastQC completed for aligned sequences of sample: $SAMPLE_NAME"
 
     #Run featureCounts
-    featureCounts --tmpDir "$TMP_DIR" -T $threads -a $annotation_dir -o "$QUANTIFICATION_DIR"/"$SAMPLE_NAME"_counts.txt "$BAM_DIR"/"$SAMPLE_NAME"_aligned.bam
+    featureCounts --tmpDir "$TMP_DIR" -T $threads -a $annotation_dir -o "$QUANTIFICATION_DIR"/count_table.txt "$BAM_DIR"/"$SAMPLE_NAME"_aligned.bam
 done
 
 # run MultiQC on all FastQC results
