@@ -8,21 +8,24 @@ library(ggrepel)
 library(ggplot2)
 library(plotly)
 
+
 # Creating the front end of the application
 ui <- dashboardPage(
+  # Setting the layout for the title, file upload and normalization button
   dashboardHeader(title = "RNAgenie"),
   dashboardSidebar(
     fileInput("count_table", "Upload count table"),
     actionButton("normalization", "Normalize Data")
   ),
+  # Setting the layout for the plots that will get displayed
   dashboardBody(
     fluidRow(
       box(plotOutput("raw_plot", height = 400), width = 6),
       box(plotOutput("normalized_plot", height = 400), width = 6)
     ),
     fluidRow(
-      box(plotlyOutput("pca_plot"), height = 400), width = 6,
-      box(plotlyOutput("box_plot"), height = 400), width = 6
+      box(plotlyOutput("pca_plot", height = 400), width = 6),
+      box(plotlyOutput("box_plot", height = 400), width = 6)
     )  
   )
 )
@@ -30,23 +33,26 @@ ui <- dashboardPage(
 # Initializing server to create plots
 server <- function(input, output) {
   
-  # Load count data
+  # Loading count table from user input file and processing it to use it 
+  # in the next steps
   data <- reactive({
     req(input$count_table)
     inFile <- input$count_table
     data <- read.table(inFile$datapath, header = TRUE, row.names = 1)
+    
+    # Log transforming the data to avoid the insertion of negative numbers
     data <- data + 1
     data <- log2(data)
     return(data)
   })
   
- # Create raw count data plot using a density plot
+  # Creating a density plot for raw count table 
   output$raw_plot <- renderPlot({
     counts <- data()
     plot(density(colSums(counts)), main = "Raw Count Data", xlab = "Total Counts", ylab = "Density")
   })
-
-  # Normalize count data and create plot
+  
+  # Normalizing count table and creating the plot
   normalized_count <- eventReactive(input$normalization, {
     counts <- data()
     y <- DGEList(counts)
@@ -55,21 +61,26 @@ server <- function(input, output) {
     norm_factors[norm_factors == Inf | is.na(norm_factors)] <- 1
     norm_counts <- counts / norm_factors
     v <- voom(norm_counts, design = NULL, plot = FALSE)
-    E <- data.frame(v$E)
-    colnames(E) <- make.names(colnames(E))
-    row.names(E) <- row.names(norm_counts)
-    list(norm_counts = norm_counts, E = E)
+    n <- data.frame(v$E)
+    colnames(n) <- make.names(colnames(n))
+    row.names(n) <- row.names(norm_counts)
+    list(norm_counts = norm_counts, E = n)
   })
-
-  # Create normalized count data plot using a density plot
+  
+  
+  # Creating a density plot for normalized count table 
   output$normalized_plot <- renderPlot({
     norm_counts <- normalized_count()$norm_counts
-    plot(density(colSums(norm_counts)), main = "Normalized Count Data", xlab = "Total Counts", ylab = "Density")
+    v <- voom(norm_counts, design = NULL, plot = FALSE)
+    norm_data <- data.frame(v$E)
+    rownames(norm_data) <- rownames(norm_counts)
+    norm_data
+    plot(density(colSums(norm_data)), main = "Normalized Count Data", xlab = "Total Counts", ylab = "Density")
   })
-
-  # Create PCA plot using plotly for an interactive view
+  
+  # Creating PCA plot using plotly for an interactive view
   output$pca_plot <- renderPlotly({
-    norms <- normalized_count()$E
+    norms <- normalized_count()$n
     pca <- prcomp(t(norms))
     variance <- round(summary(pca)$percentage[2,1]*100, 1)
     p <- plot_ly(data.frame(PC1=pca$x[,1], PC2=pca$x[,2], sample=factor(colnames(norms)))) %>%
@@ -80,12 +91,12 @@ server <- function(input, output) {
              yaxis = list(title = paste("PC2 (", summary(pca)$percentage[2, 1], "%)", sep="")))
     p
   })
-  
-  # Create boxplot using plotly for an interactive view
+ 
+  # Creating boxplot using plotly for an interactive view
   output$box_plot <- renderPlotly({
     norm_counts <- normalized_count()$norm_counts
     boxplot_df <- data.frame(Sample = colnames(norm_counts), Counts = as.numeric(as.vector(t(norm_counts))))
-    b <- plot_ly(boxplot_df, x = ~Sample, y = ~log10(Counts), type = "box") %>%
+   b <- plot_ly(boxplot_df, x = ~Sample, y = ~log10(Counts), type = "box") %>%
       layout(title = "Box plot", xaxis = list(title = "Sample"), yaxis = list(title = "log10 Counts"))
     b
   })
