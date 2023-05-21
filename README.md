@@ -239,7 +239,33 @@ Another consideration is that by default, the pipeline.sh script will not count 
 
 ### Visualization using R-shiny
 
-The R Shiny dashboard can be accessed [here]("https://lyra.shinyapps.io/RNAgenie"). The dashboard accepts a count table generated from the featureCounts program as input or any other tool as long as the table only has numeric data and the sample name are in columns. Users can normalize the data using limma voom and explore the raw count data, normalized count data, a pca plot, and a log transformation of the data through a boxplot. Keep in mind that to visualize the plots, the Normalize Data button must be clicked. Also, the server may be a little slow when loading the info so you must wait for it to load completely. There is also a chance that the dashboard may not work in the server. If that happens, open the folder named visualizations present in this repository and download the app.R script. In R studio open the app.R script and dowload all the dependencies (i.e the libraries needed to run the pipeline). A depiction on how the dashboard looks when a count table is uploaded is presented in Figure 2.
+The R Shiny dashboard can be accessed at https://lyra.shinyapps.io/RNAgenie. The dashboard accepts a count table generated from the featureCounts program as input or any other tool as long as the table only has numeric data and the sample name are in columns like this:
+
+| gene_id | sample1 | sample2 | sample3 | sample4 |
+| --- | --- | --- | --- | --- |
+| value1 | value1 | value1 | value1 | value1 |
+| value2 | value2 | value2 | value2 | valu2 |
+
+If your count table is not similar to the table as shown above, please modify it. If you run the pipeline.sh script, the count_table.txt file will contain some extra columns. Therefore, before uploading the count_table.txt file into the dashboard please eliminate those columns. Alternatively, for testing purposes, you can use the count table that is present in the demo folder that is located in the pipeline folders. The name of the count table in the demo folder is GSE60450_Lactation-GenewiseCounts.txt. 
+
+Users can normalize the data using limma voom and explore the raw count data, normalized count data, a pca plot, and a log transformation of the data through a boxplot. Keep in mind that to visualize the plots, the Normalize Data button must be clicked. Also, the server may be a little slow when loading the info so you must wait for it to load completely. There is also a chance that the dashboard may not work in the server. If that happens, open the folder named visualizations present in this repository and download the app.R script. In R studio open the app.R script and dowload all the dependencies using the following command:
+
+```R
+install.packages(c("shinydashboard", "pheatmap", "ggrepel", "ggplot2", "plotly"))
+```
+
+Bioconductor packages will also need to be installed. The following commnad can be used:
+
+```R
+# Install Bioconductor if not already installed
+if (!requireNamespace("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
+
+# Install Bioconductor packages
+BiocManager::install(c("limma", "edgeR))
+```
+
+Also, note that the shiny package is needed and will automatically added when you create the shiny web app in R studio. A depiction on how the dashboard looks when a count table is uploaded is presented in Figure 2.
 
 <figure>
   <figcaption><strong>Figure 2.</strong> Visualization of count table using R Shiny dashboard.</figcaption>
@@ -278,4 +304,4 @@ Martin, M. (2011). Cutadapt removes adapter sequences from high-throughput seque
 NCBI Sequence Read Archive: SRA Download. (n.d.). Retrieved October 28, 2021, from https://www.ncbi.nlm.nih.gov/sra/docs/sradownload/
 
 ## Privacy
-The data used to test the pipeline.sh script came from animal data and does not contain any identifier information that we see with data that comes from humans.
+The information used to test the pipeline.sh script does not deal with any sensitive or personally identifiable information that would require privacy protection measures.
